@@ -2,7 +2,7 @@
 
 CourseCraft AI is a full-stack Python web application designed to automatically generate, structure, and render comprehensive course syllabi and learning materials for any custom topic. 
 
-It features secure **User Authentication (Login & Registration)**, an **AI Course Generator Studio**, an **Interactive Course Reader**, a **Secret Admin Management Portal**, and **Markdown/JSON Course Exports**.
+It features secure **User Authentication (Login & Registration)**, an **AI Course Generator Studio**, an **Interactive Course Reader**, and **Markdown/JSON Course Exports**.
 
 ---
 
@@ -18,12 +18,6 @@ It features secure **User Authentication (Login & Registration)**, an **AI Cours
   - **Production Code Walkthroughs**: Realistic code snippets with type annotations, defensive guard validation, and structured logging.
   - **Hands-On Practical Labs**: Step-by-step terminal exercises for students to practice locally.
   - **Capstone Projects**: Final project deliverables and evaluation rubrics.
-
-- **🛡️ Secret Admin Management Panel (`/admin`)**:
-  - Hidden from public UI to ensure regular users do not see administrative controls.
-  - System metrics (Total Users, System Courses Generated, Database Status).
-  - User Management Table (View users, toggle admin privileges, delete accounts).
-  - System-Wide Course Management (View or delete any generated course).
 
 - **🎨 Modern Glassmorphism UI & Interactive Live Background**:
   - Dark mode glassmorphism design system.
@@ -67,16 +61,6 @@ Navigate to **`http://127.0.0.1:5000`** in your web browser.
 
 ---
 
-## 🔑 Admin Credentials Setup
-
-The first registered user is automatically assigned Admin privileges. You can also log in with the default admin account:
-
-- **Username / Email**: `admin` *(or `admin@coursecraft.ai`)*
-- **Password**: `admin123`
-- **Secret Admin URL**: `http://127.0.0.1:5000/admin`
-
----
-
 ## 🌐 Hosting on Render.com
 
 This repository is pre-configured for 1-click deployment on **Render.com**.
@@ -111,8 +95,7 @@ Course-Craft-Ai/
     ├── register.html      # User Registration view
     ├── dashboard.html     # User Dashboard & course library
     ├── generate.html      # Course Generator wizard
-    ├── course_detail.html # Interactive Course Learning Studio
-    └── admin.html         # Secret System Admin Portal
+    └── course_detail.html # Interactive Course Learning Studio
 ```
 
 ---
