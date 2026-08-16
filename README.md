@@ -1,8 +1,12 @@
 # 🎓 CourseCraft AI — Intelligent Python Course Generator Platform
 
-CourseCraft AI is a full-stack Python web application designed to automatically generate, structure, and render comprehensive course syllabi and learning materials for any custom topic. 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Render.com-00C7B7?style=for-the-badge&logo=render&logoColor=white)](https://course-craft-ai-xlxe.onrender.com)
+[![Python](https://img.shields.io/badge/Python-3.14-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-3.0-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
 
-It features secure **User Authentication (Login & Registration)**, an **AI Course Generator Studio**, an **Interactive Course Reader**, and **Markdown/JSON Course Exports**.
+CourseCraft AI is a full-stack Python web application designed to automatically generate, structure, and render comprehensive course syllabi and learning materials for any custom topic.
+
+👉 **Live Demo Application**: [https://course-craft-ai-xlxe.onrender.com](https://course-craft-ai-xlxe.onrender.com)
 
 ---
 
@@ -38,6 +42,13 @@ It features secure **User Authentication (Login & Registration)**, an **AI Cours
 
 ---
 
+## 🌐 Live Web Application
+
+The live application is hosted on Render and accessible worldwide:
+🔗 **[https://course-craft-ai-xlxe.onrender.com](https://course-craft-ai-xlxe.onrender.com)**
+
+---
+
 ## 🚀 Quick Start & Local Setup
 
 ### 1. Clone the Repository
@@ -58,19 +69,6 @@ python app.py
 
 ### 4. Access in Browser
 Navigate to **`http://127.0.0.1:5000`** in your web browser.
-
----
-
-## 🌐 Hosting on Render.com
-
-This repository is pre-configured for 1-click deployment on **Render.com**.
-
-1. Connect your GitHub repository on Render.
-2. Render auto-detects `render.yaml` with the following configuration:
-   - **Environment**: `Python 3`
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `gunicorn app:app`
-3. Click **Deploy Web Service**.
 
 ---
 
