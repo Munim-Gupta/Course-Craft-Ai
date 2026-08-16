@@ -32,6 +32,45 @@ CourseCraft AI is a full-stack Python web application designed to automatically 
 
 ---
 
+## 📊 Visual Project Architecture Chart
+
+```mermaid
+graph TD
+    Root["📂 CourseCraft AI (Project Root)"]
+    
+    subgraph Core ["⚡ Python Core & Server"]
+        App["app.py<br/>(Flask Server & Routing)"]
+        DB["database.py<br/>(SQLite Database & Auth)"]
+        Gen["course_generator.py<br/>(AI Synthesis Engine)"]
+    end
+
+    subgraph Front ["🎨 Glassmorphism Frontend"]
+        CSS["static/css/style.css<br/>(Glassmorphism Design & Animations)"]
+        JS["static/js/main.js<br/>(60fps Canvas Particle Network)"]
+    end
+
+    subgraph Views ["📄 Jinja2 HTML Templates"]
+        Base["templates/base.html<br/>(Navbar & Main Layout)"]
+        Auth["templates/login.html & register.html<br/>(Authentication Views)"]
+        Dash["templates/dashboard.html<br/>(Personal Course Library)"]
+        GenWiz["templates/generate.html<br/>(AI Generator Wizard)"]
+        Studio["templates/course_detail.html<br/>(Learning Studio & Reader)"]
+    end
+
+    subgraph Deploy ["☁️ Production & Config"]
+        Req["requirements.txt<br/>(Flask, Werkzeug, Gunicorn)"]
+        Yaml["render.yaml<br/>(1-Click Render Deployment)"]
+        GitIgnore[".gitignore<br/>(DB & Cache Exclusions)"]
+    end
+
+    Root --> Core
+    Root --> Front
+    Root --> Views
+    Root --> Deploy
+```
+
+---
+
 ## 🛠️ Technology Stack
 
 - **Backend**: Python 3, Flask, Werkzeug, SQLite3
@@ -72,7 +111,7 @@ Navigate to **`http://127.0.0.1:5000`** in your web browser.
 
 ---
 
-## 📁 Project Structure
+## 📁 File Structure Tree
 
 ```
 Course-Craft-Ai/
