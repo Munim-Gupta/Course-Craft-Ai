@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course_data.title }} - Studio Workspace{% endblock %}
+
+{% block content %}
+<div id="studioMainWorkspace">
+    <!-- Studio Header & Action Bar -->
+    <div class="studio-header" style="margin-bottom: 2rem;">
+        <div>
+            <div style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 0.5rem;">
+                <a href="{{ url_for('dashboard') }}" style="color: var(--text-muted); font-size: 0.9rem;">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+                </a>
+                <span style="color: var(--border-color);">|</span>
+                <span class="badge badge-{{ course_data.level | lower }}">{{ course_data.level }}</span>
+                <span style="font-size: 0.85rem; color: var(--accent);"><i class="fa-regular fa-clock"></i> {{ course_data.duration }}</span>
+            </div>
+            <h1 style="font-size: 2rem; margin-bottom: 0.35rem;">{{ course_data.title }}</h1>
+            <p style="color: var(--text-muted); font-size: 1rem;">{{ course_data.subtitle }}</p>
+        </div>
+
+        <div class="export-actions">
+            <a href="{{ url_for('export_course', course_id=course.id, export_format='markdown') }}" class="btn btn-secondary btn-sm" title="Download Markdown Study Guide">
+                <i class="fa-solid fa-file-arrow-down"></i> Export Markdown
+            </a>
+            <a href="{{ url_for('export_course', course_id=course.id, export_format='json') }}" class="btn btn-secondary btn-sm" title="Download JSON Curriculum">
+                <i class="fa-solid fa-code"></i> Export JSON
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Studio Two-Column Layout -->
+    <div class="studio-layout">
+        <!-- Sidebar Navigation (Modules & Lessons) -->
+        <aside class="sidebar-nav">
+            <h3 class="sidebar-title">
+                <i class="fa-solid fa-list-check" style="color: var(--primary);"></i> Curriculum Navigator
+            </h3>
+
+            {% for mod in course_data.modules %}
+                {% set mod_loop = loop %}
+                <div class="module-accordion-item">
+                    <div class="module-accordion-header">
+                        <span>Module {{ mod.module_number }}: {{ mod.title }}</span>
+                        <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem;"></i>
+                    </div>
+
+                    <ul class="lesson-list">
+                        {% for lesson in mod.lessons %}
+                            <li>
+                                <button 
+                                    type="button" 
+                                    class="lesson-item-btn {% if mod_loop.first and loop.first %}active{% endif %}"
+                                    data-lesson-target="lesson_card_{{ lesson.lesson_id }}"
+                                >
+                                    <i class="fa-solid fa-book-open" style="font-size: 0.8rem;"></i>
+                                    <span>Lesson {{ lesson.lesson_number }}: {{ lesson.title }}</span>
+                                </button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </aside>
+
+        <!-- Right Studio Workspace (Lesson Content & Capstone) -->
+        <div class="studio-main">
+            <!-- Render Lessons -->
+            {% for mod in course_data.modules %}
+                {% set mod_loop = loop %}
+                {% for lesson in mod.lessons %}
+                    <div 
+                        id="lesson_card_{{ lesson.lesson_id }}" 
+                        class="lesson-display-card lesson-card" 
+                        style="{% if not (mod_loop.first and loop.first) %}display: none;{% endif %}"
+                    >
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+                            <div>
+                                <span style="font-size: 0.85rem; color: var(--primary); font-weight: 700; text-transform: uppercase;">
+                                    Module {{ mod.module_number }} &bull; Lesson {{ lesson.lesson_number }}
+                                </span>
+                                <h2 style="font-size: 1.75rem; margin-top: 0.25rem;">{{ lesson.title }}</h2>
+                            </div>
+                            <span style="font-size: 0.85rem; color: var(--text-dim); background: rgba(255,255,255,0.05); padding: 0.4rem 0.85rem; border-radius: 20px;">
+                                <i class="fa-regular fa-clock"></i> {{ lesson.reading_time }}
+                            </span>
+                        </div>
+
+                        <!-- Main Lesson Content -->
+                        <div class="lesson-body">
+                            {{ lesson.content | safe }}
+                        </div>
+
+                        <!-- Code Example Block if available -->
+                        {% if lesson.code_example %}
+                            <div class="code-block-container">
+                                <div class="code-header">
+                                    <span><i class="fa-solid fa-code"></i> {{ lesson.code_example.language | upper }} Snippet</span>
+                                    <button type="button" class="btn btn-secondary btn-sm copy-code-btn" style="padding: 0.25rem 0.6rem; font-size: 0.75rem;">
+                                        <i class="fa-regular fa-copy"></i> Copy Code
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre><code>{{ lesson.code_example.code }}</code></pre>
+                                </div>
+                            </div>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; font-style: italic; margin-bottom: 1.5rem;">
+                                {{ lesson.code_example.explanation }}
+                            </p>
+                        {% endif %}
+
+                        <!-- Practical Hands-On Lab Exercise -->
+                        {% if lesson.practical_exercise %}
+                            <div style="background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.25); border-radius: var(--radius-md); padding: 1.5rem; margin-top: 1.5rem;">
+                                <h4 style="font-size: 1.05rem; color: var(--accent); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fa-solid fa-terminal"></i> {{ lesson.practical_exercise.title }}
+                                </h4>
+                                <div style="margin-left: 0.25rem; color: var(--text-main); font-size: 0.95rem;">
+                                    <p style="font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted);">Exercise Steps:</p>
+                                    {% for step in lesson.practical_exercise.instructions %}
+                                        <p style="margin-bottom: 0.35rem; font-family: monospace; font-size: 0.9rem; color: #E2E8F0;">{{ step }}</p>
+                                    {% endfor %}
+                                    <p style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-dim);">
+                                        <strong>Expected Result:</strong> {{ lesson.practical_exercise.expected_output }}
+                                    </p>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <!-- Key Takeaways Pill List -->
+                        {% if lesson.key_takeaways %}
+                            <div style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: var(--radius-md); padding: 1.25rem; margin-top: 1.5rem;">
+                                <h4 style="font-size: 1rem; color: var(--primary); margin-bottom: 0.75rem;">
+                                    <i class="fa-solid fa-lightbulb"></i> Key Takeaways
+                                </h4>
+                                <ul style="margin-left: 1.25rem; color: var(--text-main); font-size: 0.95rem;">
+                                    {% for takeaway in lesson.key_takeaways %}
+                                        <li style="margin-bottom: 0.35rem;">{{ takeaway }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            <!-- Capstone Project Card -->
+            {% if course_data.capstone_project %}
+                <div class="glass-card" style="border: 1px solid var(--border-glow); background: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%); margin-top: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                        <div class="brand-icon" style="width: 44px; height: 44px; font-size: 1.3rem; background: linear-gradient(135deg, #10B981, #06B6D4);">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <div>
+                            <span style="font-size: 0.8rem; color: var(--success); font-weight: 700; text-transform: uppercase;">Final Assessment</span>
+                            <h2 style="font-size: 1.5rem;">{{ course_data.capstone_project.title }}</h2>
+                        </div>
+                    </div>
+
+                    <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 1rem;">
+                        {{ course_data.capstone_project.description }}
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div>
+                            <h4 style="font-size: 1rem; color: var(--text-main); margin-bottom: 0.5rem;">Required Deliverables:</h4>
+                            <ul style="margin-left: 1.25rem; color: var(--text-muted); font-size: 0.9rem;">
+                                {% for item in course_data.capstone_project.deliverables %}
+                                    <li style="margin-bottom: 0.35rem;">{{ item }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4 style="font-size: 1rem; color: var(--text-main); margin-bottom: 0.5rem;">Evaluation Rubric:</h4>
+                            <ul style="margin-left: 1.25rem; color: var(--text-muted); font-size: 0.9rem;">
+                                {% for item in course_data.capstone_project.evaluation_criteria %}
+                                    <li style="margin-bottom: 0.35rem;">{{ item }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

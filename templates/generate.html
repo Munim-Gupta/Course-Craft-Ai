@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Course Generator Wizard - CourseCraft AI{% endblock %}
+
+{% block content %}
+<div class="generator-container">
+    <div style="margin-bottom: 2rem; text-align: center;">
+        <h1 style="font-size: 2.25rem; margin-bottom: 0.5rem;">
+            <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--primary);"></i> AI Course Generator Studio
+        </h1>
+        <p style="color: var(--text-muted); font-size: 1.05rem;">
+            Configure your AI customization preferences below. Our Python AI engine will craft a customized course curriculum with tailored lessons, code walk-throughs, and hands-on labs.
+        </p>
+    </div>
+
+    <div class="glass-card">
+        <form id="courseGeneratorForm" action="{{ url_for('generate_course') }}" method="POST">
+            <!-- Topic Quick Select Chips -->
+            <div style="margin-bottom: 1.25rem;">
+                <label class="form-label">Popular Topic Quick Chips:</label>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    <button type="button" class="btn btn-secondary btn-sm topic-chip" onclick="setTopic('Python Fundamentals for Beginners', 'Programming')">🐍 Python Fundamentals</button>
+                    <button type="button" class="btn btn-secondary btn-sm topic-chip" onclick="setTopic('Fullstack Web Development with Flask', 'Web Development')">🌐 Fullstack Flask Web App</button>
+                    <button type="button" class="btn btn-secondary btn-sm topic-chip" onclick="setTopic('Machine Learning & Neural Networks', 'AI & Machine Learning')">🤖 Machine Learning & AI</button>
+                    <button type="button" class="btn btn-secondary btn-sm topic-chip" onclick="setTopic('Data Structures & Algorithms in Python', 'Programming')">⚡ Data Structures & Algorithms</button>
+                    <button type="button" class="btn btn-secondary btn-sm topic-chip" onclick="setTopic('Cybersecurity & Ethical Hacking', 'Cybersecurity')">🛡️ Cybersecurity Basics</button>
+                </div>
+            </div>
+
+            <!-- Main Topic Input -->
+            <div class="form-group">
+                <label for="topicInput" class="form-label">
+                    Course Topic <span style="color: var(--primary);">*</span>
+                </label>
+                <input 
+                    type="text" 
+                    id="topicInput" 
+                    name="topic" 
+                    class="form-control" 
+                    placeholder="e.g. Fullstack Web Development with Flask, Data Structures, Machine Learning..." 
+                    required 
+                    autofocus
+                    style="font-size: 1.05rem; padding: 1rem;"
+                >
+            </div>
+
+            <div class="form-row">
+                <!-- Category Select -->
+                <div class="form-group">
+                    <label for="category" class="form-label">Category</label>
+                    <select id="category" name="category" class="form-control">
+                        <option value="Programming" selected>Programming & Software</option>
+                        <option value="Web Development">Web Development</option>
+                        <option value="Data Science">Data Science & Analytics</option>
+                        <option value="AI & Machine Learning">AI & Machine Learning</option>
+                        <option value="Cybersecurity">Cybersecurity & Networking</option>
+                        <option value="Design">UI/UX & Design</option>
+                        <option value="Business">Business & Management</option>
+                    </select>
+                </div>
+
+                <!-- Difficulty Level -->
+                <div class="form-group">
+                    <label for="level" class="form-label">Difficulty Level</label>
+                    <select id="level" name="level" class="form-control">
+                        <option value="Beginner" selected>Beginner (Zero prior knowledge)</option>
+                        <option value="Intermediate">Intermediate (Hands-on experience)</option>
+                        <option value="Advanced">Advanced (Architectural & deep dive)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <!-- Course Depth Mode -->
+                <div class="form-group">
+                    <label for="depth_mode" class="form-label">AI Depth & Detail Level</label>
+                    <select id="depth_mode" name="depth_mode" class="form-control">
+                        <option value="concise">Concise & Quick (Compact summaries & fast reading)</option>
+                        <option value="standard">Standard Balanced (Balanced theory & code)</option>
+                        <option value="detailed" selected>Extremely Detailed & Intensive (Deep dives, edge cases & labs)</option>
+                    </select>
+                </div>
+
+                <!-- Target Audience -->
+                <div class="form-group">
+                    <label for="target_audience" class="form-label">Target Audience / Role</label>
+                    <select id="target_audience" name="target_audience" class="form-control">
+                        <option value="College Students & Beginners" selected>College Students & Beginners</option>
+                        <option value="Software Engineers & Developers">Software Engineers & Developers</option>
+                        <option value="Data Analysts & Scientists">Data Analysts & Scientists</option>
+                        <option value="Job Seekers & Bootcamp Learners">Job Seekers & Bootcamp Learners</option>
+                        <option value="Entrepreneurs & Managers">Entrepreneurs & Managers</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <!-- Course Duration -->
+                <div class="form-group">
+                    <label for="duration" class="form-label">Estimated Duration</label>
+                    <select id="duration" name="duration" class="form-control">
+                        <option value="2 Weeks">2 Weeks (Quick Crash Course)</option>
+                        <option value="4 Weeks" selected>4 Weeks (Standard Pace)</option>
+                        <option value="6 Weeks">6 Weeks (In-Depth Mastery)</option>
+                        <option value="8 Weeks">8 Weeks (Comprehensive Specialization)</option>
+                    </select>
+                </div>
+
+                <!-- Number of Modules -->
+                <div class="form-group">
+                    <label for="num_modules" class="form-label">Number of Curriculum Modules</label>
+                    <select id="num_modules" name="num_modules" class="form-control">
+                        <option value="3">3 Core Modules</option>
+                        <option value="4" selected>4 Standard Modules</option>
+                        <option value="5">5 Detailed Modules</option>
+                        <option value="6">6 Intensive Modules</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Custom Focus & Goals -->
+            <div class="form-group">
+                <label for="learning_goals" class="form-label">Custom Focus / Specific Objectives (Optional)</label>
+                <textarea 
+                    id="learning_goals" 
+                    name="learning_goals" 
+                    class="form-control" 
+                    rows="3" 
+                    placeholder="e.g. Focus heavily on practical code examples, SQLite database integration, and step-by-step lab exercises."
+                ></textarea>
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: flex-end;">
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary" style="padding: 0.9rem 2rem;">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Custom Course
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Fullscreen Generation Loading Screen -->
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">
+        <h3>Synthesizing Your Custom Course...</h3>
+        <p style="margin-top: 0.5rem; color: var(--accent);">Structuring detailed modules, code walk-throughs, and practical labs...</p>
+    </div>
+</div>
+
+<script>
+function setTopic(topicName, catName) {
+    document.getElementById('topicInput').value = topicName;
+    if (catName) {
+        document.getElementById('category').value = catName;
+    }
+}
+</script>
+{% endblock %}

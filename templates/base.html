@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CourseCraft AI - Intelligent Python Course Generator{% endblock %}</title>
+    
+    <!-- Meta tags for SEO -->
+    <meta name="description" content="AI-powered course generation engine written in Python. Create, customize, learn, and export comprehensive courses effortlessly.">
+    <meta name="author" content="CourseCraft AI Team">
+    
+    <!-- Favicon & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Marked.js for dynamic Markdown formatting -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Live Animated Background Canvas & Orbs -->
+    <canvas id="liveBackgroundCanvas"></canvas>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+
+    <div class="app-container">
+        <!-- Navigation Header -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <a href="{{ url_for('index') }}" class="brand-logo">
+                    <div class="brand-icon">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <span>CourseCraft <span class="brand-badge">AI</span></span>
+                </a>
+
+                <ul class="nav-links">
+                    {% if g.user %}
+                        <li>
+                            <a href="{{ url_for('dashboard') }}" class="nav-item-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                                <i class="fa-solid fa-grid-2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('generate_course') }}" class="nav-item-link {% if request.endpoint == 'generate_course' %}active{% endif %}">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Course
+                            </a>
+                        </li>
+                        
+                        <!-- Secret Admin Link: Only rendered for logged-in Admin Users -->
+                        {% if g.user.is_admin == 1 %}
+                            <li>
+                                <a href="{{ url_for('admin_panel') }}" class="btn btn-danger btn-sm" style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4);">
+                                    <i class="fa-solid fa-shield-halved"></i> Admin Portal
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        <li>
+                            <div class="user-profile-badge">
+                                <div class="avatar">{{ g.user.username[0] | upper }}</div>
+                                <span>{{ g.user.username }}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('logout') }}" class="btn btn-secondary btn-sm">
+                                <i class="fa-solid fa-right-from-bracket"></i> Logout
+                            </a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{{ url_for('login') }}" class="nav-item-link {% if request.endpoint == 'login' %}active{% endif %}">
+                                Log In
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('register') }}" class="btn btn-primary btn-sm">
+                                Get Started
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Body Workspace -->
+        <main class="main-content">
+            <!-- Flash Messages Banner -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-container">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                <span><i class="fa-solid fa-circle-info"></i> {{ message }}</span>
+                                <button type="button" onclick="this.parentElement.remove()" style="background:none;border:none;color:inherit;cursor:pointer;font-size:1.1rem;">&times;</button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Global Footer -->
+        <footer class="footer">
+            <div class="footer-container">
+                <p>&copy; 2026 CourseCraft AI. Powered by Python & Flask. Built for Next-Generation Learning.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Main JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
