@@ -107,11 +107,7 @@ python app.py
 ```
 
 ### 4. Access in Browser
-Navigate to **`http://127.0.0.1:5000`** in your web browser.
-
-### 5. Default Administrator Login
-- **Username / Email**: `admin` *(or `admin@coursecraft.ai`)*
-- **Password**: `admin123`
+Navigate to **`http://127.0.0.1:5000`** in your web browser. Note: The first user registered on a clean system automatically gains Administrator privileges.
 
 ---
 

@@ -48,17 +48,6 @@ def init_db():
     ''')
     
     conn.commit()
-
-    # Seed default admin account if table is empty
-    cursor.execute("SELECT COUNT(*) as count FROM users")
-    if cursor.fetchone()['count'] == 0:
-        admin_pw_hash = generate_password_hash("admin123")
-        cursor.execute(
-            "INSERT INTO users (username, email, password_hash, is_admin) VALUES (?, ?, ?, ?)",
-            ('admin', 'admin@coursecraft.ai', admin_pw_hash, 1)
-        )
-        conn.commit()
-
     conn.close()
 
 def register_user(username, email, password):
