@@ -73,7 +73,8 @@ graph TD
 
 ## 🛠️ Technology Stack
 
-- **Backend**: Python 3, Flask, Werkzeug, SQLite3
+- **Backend**: Python 3, Flask, Werkzeug, SQLite3 & PostgreSQL (Cloud Persistence)
+- **Database**: Dual SQLite3 (Local) / PostgreSQL (Cloud Persistent)
 - **Production WSGI Server**: Gunicorn
 - **Frontend**: HTML5, Vanilla CSS3 (Glassmorphism), JavaScript (ES6+), FontAwesome
 - **Dynamic Formatting**: Marked.js
