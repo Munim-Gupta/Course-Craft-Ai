@@ -47,6 +47,19 @@ def init_db():
         )
     ''')
     
+    # Ensure a default admin account exists in any database instance
+    cursor.execute("SELECT id FROM users WHERE LOWER(username) = 'admin' OR LOWER(email) = 'admin@coursecraft.ai'")
+    admin_exists = cursor.fetchone()
+    if not admin_exists:
+        hashed_pw = generate_password_hash('admin123')
+        cursor.execute(
+            "INSERT INTO users (username, email, password_hash, is_admin) VALUES (?, ?, ?, ?)",
+            ('admin', 'admin@coursecraft.ai', hashed_pw, 1)
+        )
+    else:
+        # Ensure admin has admin privileges and known hash if needed
+        cursor.execute("UPDATE users SET is_admin = 1 WHERE id = ?", (admin_exists['id'],))
+        
     conn.commit()
     conn.close()
 
