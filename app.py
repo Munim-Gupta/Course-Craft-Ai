@@ -104,7 +104,11 @@ def login():
             next_page = request.args.get('next')
             return redirect(next_page or url_for('dashboard'))
         else:
-            flash('Invalid username/email or password.', 'danger')
+            existing_user = db.get_user_by_username_or_email(username_or_email)
+            if existing_user:
+                flash('Incorrect password. If you registered previously, please double check your password.', 'danger')
+            else:
+                flash('No account found with this username or email. Please register below.', 'danger')
             return render_template('login.html', username_or_email=username_or_email)
             
     return render_template('login.html')

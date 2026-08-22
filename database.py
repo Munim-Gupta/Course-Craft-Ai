@@ -54,11 +54,21 @@ def register_user(username, email, password):
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    # Check if username or email already exists
-    cursor.execute("SELECT id FROM users WHERE username = ? OR email = ?", (username, email))
-    if cursor.fetchone():
+    clean_username = username.strip()
+    clean_email = email.strip().lower()
+    
+    # Check if username or email already exists (case-insensitive)
+    cursor.execute(
+        "SELECT id, username, email FROM users WHERE LOWER(username) = LOWER(?) OR LOWER(email) = LOWER(?)",
+        (clean_username, clean_email)
+    )
+    existing = cursor.fetchone()
+    if existing:
         conn.close()
-        return False, "Username or Email already registered."
+        if existing['email'].lower() == clean_email:
+            return False, "An account with this email already exists. Please log in using the Log In form."
+        else:
+            return False, "This username is already taken. Please choose another username or log in."
     
     # Check total users - first registered user becomes admin automatically
     cursor.execute("SELECT COUNT(*) as count FROM users")
@@ -69,7 +79,7 @@ def register_user(username, email, password):
     try:
         cursor.execute(
             "INSERT INTO users (username, email, password_hash, is_admin) VALUES (?, ?, ?, ?)",
-            (username, email, hashed_pw, is_admin)
+            (clean_username, clean_email, hashed_pw, is_admin)
         )
         conn.commit()
         user_id = cursor.lastrowid
@@ -83,9 +93,11 @@ def authenticate_user(username_or_email, password):
     conn = get_db_connection()
     cursor = conn.cursor()
     
+    clean_input = username_or_email.strip()
+    
     cursor.execute(
-        "SELECT * FROM users WHERE username = ? OR email = ?",
-        (username_or_email, username_or_email)
+        "SELECT * FROM users WHERE LOWER(username) = LOWER(?) OR LOWER(email) = LOWER(?)",
+        (clean_input, clean_input)
     )
     user = cursor.fetchone()
     conn.close()
@@ -93,6 +105,45 @@ def authenticate_user(username_or_email, password):
     if user and check_password_hash(user['password_hash'], password):
         return dict(user)
     return None
+
+def get_user_by_username_or_email(username_or_email):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    clean_input = username_or_email.strip()
+    cursor.execute(
+        "SELECT id, username, email FROM users WHERE LOWER(username) = LOWER(?) OR LOWER(email) = LOWER(?)",
+        (clean_input, clean_input)
+    )
+    user = cursor.fetchone()
+    conn.close()
+    return dict(user) if user else None
+
+def reset_user_password(username_or_email, new_password):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    clean_input = username_or_email.strip()
+    hashed_pw = generate_password_hash(new_password)
+    cursor.execute(
+        "UPDATE users SET password_hash = ? WHERE LOWER(username) = LOWER(?) OR LOWER(email) = LOWER(?)",
+        (hashed_pw, clean_input, clean_input)
+    )
+    conn.commit()
+    affected = cursor.rowcount
+    conn.close()
+    return affected > 0
+
+def make_user_admin(username_or_email):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    clean_input = username_or_email.strip()
+    cursor.execute(
+        "UPDATE users SET is_admin = 1 WHERE LOWER(username) = LOWER(?) OR LOWER(email) = LOWER(?)",
+        (clean_input, clean_input)
+    )
+    conn.commit()
+    affected = cursor.rowcount
+    conn.close()
+    return affected > 0
 
 def get_user_by_id(user_id):
     conn = get_db_connection()
