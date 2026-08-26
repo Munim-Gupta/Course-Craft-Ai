@@ -154,11 +154,40 @@ def generate_course():
         topic = request.form.get('topic', '').strip()
         category = request.form.get('category', 'Programming')
         level = request.form.get('level', 'Beginner')
-        duration = request.form.get('duration', '4 Weeks')
-        num_modules = int(request.form.get('num_modules', 4))
-        depth_mode = request.form.get('depth_mode', 'detailed')
+        
+        # Duration selection handling
+        duration_option = request.form.get('duration', '1 Month')
+        if duration_option == 'Custom':
+            duration = request.form.get('custom_duration', '1 Month').strip() or '1 Month'
+        else:
+            duration = duration_option
+
+        # Number of modules handling
+        num_modules_val = request.form.get('num_modules', '5')
+        if num_modules_val == 'Custom':
+            try:
+                num_modules = int(request.form.get('custom_num_modules', 5))
+            except (ValueError, TypeError):
+                num_modules = 5
+        else:
+            try:
+                num_modules = int(num_modules_val)
+            except (ValueError, TypeError):
+                num_modules = 5
+                
+        depth_mode = request.form.get('depth_mode', 'standard')
+        language = request.form.get('language', 'English')
         target_audience = request.form.get('target_audience', 'Students & Professionals')
-        learning_goals = request.form.get('learning_goals', '').strip()
+        
+        learning_goal = request.form.get('learning_goal', 'Build Projects')
+        custom_goal = request.form.get('custom_goal', '').strip()
+        
+        if learning_goal == 'Custom Goal':
+            learning_goals = custom_goal if custom_goal else "Custom Learning Goals"
+        else:
+            learning_goals = f"Target Goal: {learning_goal}"
+            if custom_goal:
+                learning_goals += f". Additional Context: {custom_goal}"
         
         if not topic:
             flash('Please enter a course topic.', 'danger')
@@ -173,7 +202,8 @@ def generate_course():
             num_modules=num_modules,
             learning_goals=learning_goals,
             depth_mode=depth_mode,
-            target_audience=target_audience
+            target_audience=target_audience,
+            language=language
         )
         
         # Save to database

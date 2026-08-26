@@ -840,3 +840,237 @@ select.form-control {
     font-size: 0.9rem;
     margin-top: auto;
 }
+
+/* ==========================================================================
+   Customize Your Course Interactive Form Styling (Redesign)
+   ========================================================================== */
+.customize-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.customize-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: #FFFFFF;
+    letter-spacing: -0.5px;
+}
+
+.gradient-text-purple-pink {
+    background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.customize-subtitle {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+.customize-card {
+    background: rgba(13, 17, 26, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.custom-step-group {
+    margin-bottom: 2.25rem;
+}
+
+.step-label {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.step-label span.step-num {
+    color: #FFFFFF;
+}
+
+.topic-input-wrapper {
+    position: relative;
+}
+
+.topic-input {
+    width: 100%;
+    background: rgba(18, 24, 38, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    font-size: 1rem;
+    color: #FFFFFF;
+    transition: all 0.25s ease;
+}
+
+.topic-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+    background: rgba(22, 30, 48, 0.95);
+}
+
+.topic-subtext {
+    font-size: 0.825rem;
+    color: #6B7280;
+    margin-top: 0.5rem;
+}
+
+/* Card Grids for Option Selecting */
+.options-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.options-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.options-grid-6 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.options-pill-row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.75rem;
+}
+
+@media (max-width: 868px) {
+    .options-grid-4, .options-grid-3, .options-grid-6 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .options-pill-row {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 520px) {
+    .options-grid-4, .options-grid-3, .options-grid-6 {
+        grid-template-columns: 1fr;
+    }
+    .options-pill-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.opt-card {
+    background: rgba(18, 24, 38, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 1.1rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+}
+
+.opt-card:hover {
+    background: rgba(28, 36, 56, 0.85);
+    border-color: rgba(99, 102, 241, 0.4);
+    transform: translateY(-2px);
+}
+
+.opt-card.active {
+    background: rgba(28, 42, 77, 0.9);
+    border: 2px solid #3b82f6;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.35);
+}
+
+.opt-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.opt-card-sub {
+    font-size: 0.775rem;
+    color: #9CA3AF;
+}
+
+/* Option Pill style */
+.opt-pill {
+    background: rgba(18, 24, 38, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 0.9rem 0.5rem;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+}
+
+.opt-pill:hover {
+    background: rgba(28, 36, 56, 0.85);
+    border-color: rgba(99, 102, 241, 0.4);
+    transform: translateY(-2px);
+}
+
+.opt-pill.active {
+    background: rgba(28, 42, 77, 0.9);
+    border: 2px solid #3b82f6;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.35);
+}
+
+/* Submit Button */
+.btn-proceed-preview {
+    width: 100%;
+    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+    border: none;
+    border-radius: 14px;
+    padding: 1.15rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 1rem;
+}
+
+.btn-proceed-preview:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(236, 72, 153, 0.5);
+    opacity: 0.96;
+}
+
+.custom-input-toggle {
+    margin-top: 0.85rem;
+    display: none;
+}
+
+.custom-input-toggle.show {
+    display: block;
+}
+

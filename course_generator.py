@@ -1,7 +1,7 @@
 import json
 import random
 
-def generate_course_curriculum(topic, category="General", level="Beginner", duration="4 Weeks", num_modules=4, learning_goals="", depth_mode="detailed", target_audience="Students & Professionals"):
+def generate_course_curriculum(topic, category="General", level="Beginner", duration="4 Weeks", num_modules=4, learning_goals="", depth_mode="detailed", target_audience="Students & Professionals", language="English"):
     """
     Generates an extensive course syllabus with rich HTML-formatted lesson content,
     structured paragraphs, clean bullet points, callout boxes, code walk-throughs,
@@ -9,24 +9,30 @@ def generate_course_curriculum(topic, category="General", level="Beginner", dura
     """
     topic_clean = topic.strip()
     
-    # Custom titles
+    # Custom titles based on difficulty level
     if level == "Beginner":
         title = f"{topic_clean}: Master the Fundamentals"
-        subtitle = f"A {duration} {level}-level course tailored for {target_audience}."
+        subtitle = f"A {duration} {level}-level course tailored for {target_audience} in {language}."
     elif level == "Intermediate":
         title = f"{topic_clean}: Practical Software Engineering"
-        subtitle = f"An intensive {duration} building production-grade solutions."
-    else:
+        subtitle = f"An intensive {duration} building production-grade solutions in {language}."
+    elif level == "Advanced":
         title = f"Advanced {topic_clean}: Architecture & Optimization"
-        subtitle = f"A high-level {duration} specialization for senior practitioners."
+        subtitle = f"A high-level {duration} specialization for senior practitioners in {language}."
+    elif level == "Expert":
+        title = f"Expert {topic_clean}: Deep Mastery & Enterprise Systems"
+        subtitle = f"An elite {duration} expert-level mastery track in {language}."
+    else:
+        title = f"{topic_clean}: Comprehensive Course"
+        subtitle = f"A {duration} custom course tailored for {target_audience} in {language}."
         
     description = (
-        f"Welcome to <strong>{title}</strong>! This curriculum is crafted specifically for <strong>{target_audience}</strong>. "
+        f"Welcome to <strong>{title}</strong>! This curriculum is crafted specifically for <strong>{target_audience}</strong> in <strong>{language}</strong>. "
         f"You will explore key concepts in <strong>{topic_clean}</strong> through structured lesson modules, "
         f"production code examples, hands-on lab exercises, and a complete capstone project."
     )
     if learning_goals:
-        description += f" <br><br><strong>Custom Focus Area:</strong> {learning_goals}"
+        description += f" <br><br><strong>Primary Focus & Goal:</strong> {learning_goals}"
         
     prerequisites = [
         f"Basic computer literacy and a text/code editor installed",
@@ -58,7 +64,7 @@ def generate_course_curriculum(topic, category="General", level="Beginner", dura
             code_snippet, code_lang, code_explain = generate_realistic_code_example(topic_clean, subtopic['name'], lesson_name)
             practical_lab = generate_practical_lab(topic_clean, lesson_name)
             
-            read_time = "10-15 mins" if depth_mode == "concise" else ("20-25 mins" if depth_mode == "standard" else "30-35 mins")
+            read_time = "10-15 mins" if depth_mode in ["concise", "quick"] else ("20-25 mins" if depth_mode == "standard" else ("40+ mins" if depth_mode == "masterclass" else "30-35 mins"))
             
             lessons.append({
                 "lesson_id": f"m{idx}_l{l_idx}",
@@ -100,6 +106,7 @@ def generate_course_curriculum(topic, category="General", level="Beginner", dura
         "level": level,
         "duration": duration,
         "depth_mode": depth_mode,
+        "language": language,
         "target_audience": target_audience,
         "prerequisites": prerequisites,
         "learning_outcomes": learning_outcomes,

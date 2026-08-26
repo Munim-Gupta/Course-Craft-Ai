@@ -1,141 +1,177 @@
 {% extends "base.html" %}
 
-{% block title %}Course Generator Wizard - CourseCraft AI{% endblock %}
+{% block title %}Customize Your Course - CourseCraft AI{% endblock %}
 
 {% block content %}
 <div class="generator-container">
-    <div style="margin-bottom: 2rem; text-align: center;">
-        <h1 style="font-size: 2.25rem; margin-bottom: 0.5rem;">
-            <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--primary);"></i> AI Course Generator Studio
+    <div class="customize-header">
+        <h1 class="customize-title">
+            Customize Your <span class="gradient-text-purple-pink">Course</span>
         </h1>
-        <p style="color: var(--text-muted); font-size: 1.05rem;">
-            Configure your AI customization preferences below. Our Python AI engine will craft a customized course curriculum with tailored lessons, code walk-throughs, and hands-on labs.
+        <p class="customize-subtitle">
+            Configure your learning preferences and let our intelligent engine generate your structured curriculum.
         </p>
     </div>
 
-    <div class="glass-card">
+    <div class="customize-card">
         <form id="courseGeneratorForm" action="{{ url_for('generate_course') }}" method="POST">
-            <!-- Topic Quick Select Chips -->
-            <div style="margin-bottom: 1.25rem;">
-                <label class="form-label">Popular Topic Quick Chips:</label>
-                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-                    <button type="button" class="btn btn-secondary btn-sm topic-chip" onclick="setTopic('Python Fundamentals for Beginners', 'Programming')">🐍 Python Fundamentals</button>
-                    <button type="button" class="btn btn-secondary btn-sm topic-chip" onclick="setTopic('Fullstack Web Development with Flask', 'Web Development')">🌐 Fullstack Flask Web App</button>
-                    <button type="button" class="btn btn-secondary btn-sm topic-chip" onclick="setTopic('Machine Learning & Neural Networks', 'AI & Machine Learning')">🤖 Machine Learning & AI</button>
-                    <button type="button" class="btn btn-secondary btn-sm topic-chip" onclick="setTopic('Data Structures & Algorithms in Python', 'Programming')">⚡ Data Structures & Algorithms</button>
-                    <button type="button" class="btn btn-secondary btn-sm topic-chip" onclick="setTopic('Cybersecurity & Ethical Hacking', 'Cybersecurity')">🛡️ Cybersecurity Basics</button>
+            
+            <!-- Hidden inputs to submit selected values -->
+            <input type="hidden" name="level" id="input_level" value="Beginner">
+            <input type="hidden" name="num_modules" id="input_num_modules" value="5">
+            <input type="hidden" name="depth_mode" id="input_depth_mode" value="standard">
+            <input type="hidden" name="duration" id="input_duration" value="1 Month">
+            <input type="hidden" name="learning_goal" id="input_learning_goal" value="Build Projects">
+
+            <!-- 1. Course Topic -->
+            <div class="custom-step-group">
+                <div class="step-label">
+                    <span class="step-num">1. Course Topic</span>
+                </div>
+                <div class="topic-input-wrapper">
+                    <input 
+                        type="text" 
+                        id="topicInput" 
+                        name="topic" 
+                        class="topic-input" 
+                        placeholder="e.g. Python Programming, Web Development, Data Structures, Cyber Security..." 
+                        required 
+                        autofocus
+                    >
+                </div>
+                <div class="topic-subtext">Enter any subject or skill you wish to master.</div>
+            </div>
+
+            <!-- 2. Difficulty Level -->
+            <div class="custom-step-group">
+                <div class="step-label">
+                    <span class="step-num">2. Difficulty Level</span>
+                </div>
+                <div class="options-grid-4">
+                    <div class="opt-card active" onclick="selectCardOption('level', 'Beginner', this)">
+                        <div class="opt-card-title">🌱 Beginner</div>
+                        <div class="opt-card-sub">No prior knowledge</div>
+                    </div>
+                    <div class="opt-card" onclick="selectCardOption('level', 'Intermediate', this)">
+                        <div class="opt-card-title">⚡ Intermediate</div>
+                        <div class="opt-card-sub">Knows fundamentals</div>
+                    </div>
+                    <div class="opt-card" onclick="selectCardOption('level', 'Advanced', this)">
+                        <div class="opt-card-title">🔥 Advanced</div>
+                        <div class="opt-card-sub">Experienced learner</div>
+                    </div>
+                    <div class="opt-card" onclick="selectCardOption('level', 'Expert', this)">
+                        <div class="opt-card-title">👑 Expert</div>
+                        <div class="opt-card-sub">Deep mastery</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Main Topic Input -->
-            <div class="form-group">
-                <label for="topicInput" class="form-label">
-                    Course Topic <span style="color: var(--primary);">*</span>
-                </label>
-                <input 
-                    type="text" 
-                    id="topicInput" 
-                    name="topic" 
-                    class="form-control" 
-                    placeholder="e.g. Fullstack Web Development with Flask, Data Structures, Machine Learning..." 
-                    required 
-                    autofocus
-                    style="font-size: 1.05rem; padding: 1rem;"
-                >
-            </div>
-
-            <div class="form-row">
-                <!-- Category Select -->
-                <div class="form-group">
-                    <label for="category" class="form-label">Category</label>
-                    <select id="category" name="category" class="form-control">
-                        <option value="Programming" selected>Programming & Software</option>
-                        <option value="Web Development">Web Development</option>
-                        <option value="Data Science">Data Science & Analytics</option>
-                        <option value="AI & Machine Learning">AI & Machine Learning</option>
-                        <option value="Cybersecurity">Cybersecurity & Networking</option>
-                        <option value="Design">UI/UX & Design</option>
-                        <option value="Business">Business & Management</option>
-                    </select>
+            <!-- 3. Number of Modules -->
+            <div class="custom-step-group">
+                <div class="step-label">
+                    <span class="step-num">3. Number of Modules</span>
                 </div>
-
-                <!-- Difficulty Level -->
-                <div class="form-group">
-                    <label for="level" class="form-label">Difficulty Level</label>
-                    <select id="level" name="level" class="form-control">
-                        <option value="Beginner" selected>Beginner (Zero prior knowledge)</option>
-                        <option value="Intermediate">Intermediate (Hands-on experience)</option>
-                        <option value="Advanced">Advanced (Architectural & deep dive)</option>
-                    </select>
+                <div class="options-pill-row">
+                    <div class="opt-pill" onclick="selectPillOption('num_modules', '3', this)">3 Modules</div>
+                    <div class="opt-pill active" onclick="selectPillOption('num_modules', '5', this)">5 Modules</div>
+                    <div class="opt-pill" onclick="selectPillOption('num_modules', '8', this)">8 Modules</div>
+                    <div class="opt-pill" onclick="selectPillOption('num_modules', '10', this)">10 Modules</div>
+                    <div class="opt-pill" onclick="selectPillOption('num_modules', '12', this)">12 Modules</div>
+                    <div class="opt-pill" onclick="selectPillOption('num_modules', 'Custom', this)">Custom</div>
+                </div>
+                <div id="custom_modules_wrapper" class="custom-input-toggle">
+                    <input type="number" name="custom_num_modules" min="1" max="20" class="topic-input" style="padding: 0.75rem 1rem;" placeholder="Enter custom module count (e.g. 7)">
                 </div>
             </div>
 
-            <div class="form-row">
-                <!-- Course Depth Mode -->
-                <div class="form-group">
-                    <label for="depth_mode" class="form-label">AI Depth & Detail Level</label>
-                    <select id="depth_mode" name="depth_mode" class="form-control">
-                        <option value="concise">Concise & Quick (Compact summaries & fast reading)</option>
-                        <option value="standard">Standard Balanced (Balanced theory & code)</option>
-                        <option value="detailed" selected>Extremely Detailed & Intensive (Deep dives, edge cases & labs)</option>
-                    </select>
+            <!-- 4. Course Depth -->
+            <div class="custom-step-group">
+                <div class="step-label">
+                    <span class="step-num">4. Course Depth</span>
                 </div>
-
-                <!-- Target Audience -->
-                <div class="form-group">
-                    <label for="target_audience" class="form-label">Target Audience / Role</label>
-                    <select id="target_audience" name="target_audience" class="form-control">
-                        <option value="College Students & Beginners" selected>College Students & Beginners</option>
-                        <option value="Software Engineers & Developers">Software Engineers & Developers</option>
-                        <option value="Data Analysts & Scientists">Data Analysts & Scientists</option>
-                        <option value="Job Seekers & Bootcamp Learners">Job Seekers & Bootcamp Learners</option>
-                        <option value="Entrepreneurs & Managers">Entrepreneurs & Managers</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <!-- Course Duration -->
-                <div class="form-group">
-                    <label for="duration" class="form-label">Estimated Duration</label>
-                    <select id="duration" name="duration" class="form-control">
-                        <option value="2 Weeks">2 Weeks (Quick Crash Course)</option>
-                        <option value="4 Weeks" selected>4 Weeks (Standard Pace)</option>
-                        <option value="6 Weeks">6 Weeks (In-Depth Mastery)</option>
-                        <option value="8 Weeks">8 Weeks (Comprehensive Specialization)</option>
-                    </select>
-                </div>
-
-                <!-- Number of Modules -->
-                <div class="form-group">
-                    <label for="num_modules" class="form-label">Number of Curriculum Modules</label>
-                    <select id="num_modules" name="num_modules" class="form-control">
-                        <option value="3">3 Core Modules</option>
-                        <option value="4" selected>4 Standard Modules</option>
-                        <option value="5">5 Detailed Modules</option>
-                        <option value="6">6 Intensive Modules</option>
-                    </select>
+                <div class="options-grid-4">
+                    <div class="opt-card" onclick="selectCardOption('depth_mode', 'quick', this)">
+                        <div class="opt-card-title">⚡ Quick</div>
+                        <div class="opt-card-sub">Short crash course</div>
+                    </div>
+                    <div class="opt-card active" onclick="selectCardOption('depth_mode', 'standard', this)">
+                        <div class="opt-card-title">⚖️ Standard</div>
+                        <div class="opt-card-sub">Balanced learning</div>
+                    </div>
+                    <div class="opt-card" onclick="selectCardOption('depth_mode', 'detailed', this)">
+                        <div class="opt-card-title">📖 Detailed</div>
+                        <div class="opt-card-sub">In-depth explanations</div>
+                    </div>
+                    <div class="opt-card" onclick="selectCardOption('depth_mode', 'masterclass', this)">
+                        <div class="opt-card-title">🚀 Masterclass</div>
+                        <div class="opt-card-sub">Comprehensive guide</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Custom Focus & Goals -->
-            <div class="form-group">
-                <label for="learning_goals" class="form-label">Custom Focus / Specific Objectives (Optional)</label>
-                <textarea 
-                    id="learning_goals" 
-                    name="learning_goals" 
-                    class="form-control" 
-                    rows="3" 
-                    placeholder="e.g. Focus heavily on practical code examples, SQLite database integration, and step-by-step lab exercises."
-                ></textarea>
+            <!-- 5. Course Duration -->
+            <div class="custom-step-group">
+                <div class="step-label">
+                    <span class="step-num">5. Course Duration</span>
+                </div>
+                <div class="options-grid-4">
+                    <div class="opt-card" onclick="selectCardOption('duration', '1 Week', this)">
+                        <div class="opt-card-title">1 Week</div>
+                        <div class="opt-card-sub">Fast Paced</div>
+                    </div>
+                    <div class="opt-card" onclick="selectCardOption('duration', '2 Weeks', this)">
+                        <div class="opt-card-title">2 Weeks</div>
+                        <div class="opt-card-sub">Accelerated</div>
+                    </div>
+                    <div class="opt-card active" onclick="selectCardOption('duration', '1 Month', this)">
+                        <div class="opt-card-title">1 Month</div>
+                        <div class="opt-card-sub">Standard Pace</div>
+                    </div>
+                    <div class="opt-card" onclick="selectCardOption('duration', 'Custom', this)">
+                        <div class="opt-card-title">Custom</div>
+                        <div class="opt-card-sub">Set your timeline</div>
+                    </div>
+                </div>
+                <div id="custom_duration_wrapper" class="custom-input-toggle">
+                    <input type="text" name="custom_duration" class="topic-input" style="padding: 0.75rem 1rem;" placeholder="e.g. 3 Months, 10 Days...">
+                </div>
             </div>
 
-            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: flex-end;">
-                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary" style="padding: 0.9rem 2rem;">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Custom Course
-                </button>
+            <!-- 6. Learning Goal -->
+            <div class="custom-step-group">
+                <div class="step-label">
+                    <span class="step-num">6. Learning Goal</span>
+                </div>
+                <div class="options-grid-6">
+                    <div class="opt-card" onclick="selectCardOption('learning_goal', 'Learn Basics', this)">
+                        <div class="opt-card-title">📖 Learn Basics</div>
+                    </div>
+                    <div class="opt-card" onclick="selectCardOption('learning_goal', 'Exam Prep', this)">
+                        <div class="opt-card-title">🎯 Exam Prep</div>
+                    </div>
+                    <div class="opt-card active" onclick="selectCardOption('learning_goal', 'Build Projects', this)">
+                        <div class="opt-card-title">💻 Build Projects</div>
+                    </div>
+                    <div class="opt-card" onclick="selectCardOption('learning_goal', 'Job Readiness', this)">
+                        <div class="opt-card-title">💼 Job Readiness</div>
+                    </div>
+                    <div class="opt-card" onclick="selectCardOption('learning_goal', 'Interview Prep', this)">
+                        <div class="opt-card-title">🗣️ Interview Prep</div>
+                    </div>
+                    <div class="opt-card" onclick="selectCardOption('learning_goal', 'Custom Goal', this)">
+                        <div class="opt-card-title">✏️ Custom Goal</div>
+                    </div>
+                </div>
+                <div id="custom_goal_wrapper" class="custom-input-toggle">
+                    <textarea name="custom_goal" class="topic-input" rows="2" style="padding: 0.75rem 1rem;" placeholder="Specify any additional goals or specific requirements..."></textarea>
+                </div>
             </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-proceed-preview">
+                Proceed to Preview &rarr;
+            </button>
         </form>
     </div>
 </div>
@@ -150,11 +186,51 @@
 </div>
 
 <script>
-function setTopic(topicName, catName) {
-    document.getElementById('topicInput').value = topicName;
-    if (catName) {
-        document.getElementById('category').value = catName;
+function selectCardOption(group, val, element) {
+    document.getElementById('input_' + group).value = val;
+    const parentGrid = element.parentElement;
+    const cards = parentGrid.querySelectorAll('.opt-card');
+    cards.forEach(c => c.classList.remove('active'));
+    element.classList.add('active');
+
+    // Toggle custom inputs if applicable
+    if (group === 'duration') {
+        const customWrapper = document.getElementById('custom_duration_wrapper');
+        if (val === 'Custom') {
+            customWrapper.classList.add('show');
+        } else {
+            customWrapper.classList.remove('show');
+        }
+    }
+    if (group === 'learning_goal') {
+        const customWrapper = document.getElementById('custom_goal_wrapper');
+        if (val === 'Custom Goal') {
+            customWrapper.classList.add('show');
+        } else {
+            customWrapper.classList.remove('show');
+        }
     }
 }
+
+function selectPillOption(group, val, element) {
+    document.getElementById('input_' + group).value = val;
+    const parentRow = element.parentElement;
+    const pills = parentRow.querySelectorAll('.opt-pill');
+    pills.forEach(p => p.classList.remove('active'));
+    element.classList.add('active');
+
+    if (group === 'num_modules') {
+        const customWrapper = document.getElementById('custom_modules_wrapper');
+        if (val === 'Custom') {
+            customWrapper.classList.add('show');
+        } else {
+            customWrapper.classList.remove('show');
+        }
+    }
+}
+
+document.getElementById('courseGeneratorForm').addEventListener('submit', function() {
+    document.getElementById('loadingOverlay').style.display = 'flex';
+});
 </script>
 {% endblock %}
